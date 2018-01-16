@@ -1,5 +1,6 @@
 package hello;
 
+import hello.storage.service.FileSystemStorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,8 +23,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
 
-import hello.storage.service.StorageService;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FileUploadIntegrationTests {
@@ -32,7 +31,7 @@ public class FileUploadIntegrationTests {
 	private TestRestTemplate restTemplate;
 
 	@MockBean
-	private StorageService storageService;
+	private FileSystemStorageService storageService;
 
 	@LocalServerPort
 	private int port;

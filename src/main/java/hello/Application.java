@@ -1,5 +1,6 @@
 package hello;
 
+import hello.storage.service.FileSystemStorageService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 
 import hello.storage.configuration.StorageProperties;
-import hello.storage.service.StorageService;
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
@@ -18,7 +18,7 @@ public class Application {
     }
 
     @Bean
-    CommandLineRunner init(StorageService storageService) {
+    CommandLineRunner init(FileSystemStorageService storageService) {
         return (args) -> {
             //storageService.deleteAll();
             //storageService.init();

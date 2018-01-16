@@ -3,6 +3,7 @@ package hello.storage.controller;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import hello.storage.service.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -20,16 +21,15 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import hello.storage.exeception.StorageFileNotFoundException;
-import hello.storage.service.StorageService;
 
 @Controller
 public class FileUploadController {
 
-    private final StorageService storageService;
+    private final FileSystemStorageService fileSystemStorageService;
 
     @Autowired
-    public FileUploadController(StorageService storageService) {
-        this.storageService = storageService;
+    public FileUploadController(FileSystemStorageService fileSystemStorageService) {
+        this.fileSystemStorageService = fileSystemStorageService;
     }
 
     @GetMapping("/")
@@ -37,15 +37,16 @@ public class FileUploadController {
 
         model.addAttribute(
                 "files",
-                storageService
+                fileSystemStorageService
                         .loadAll()
-                        .map(path -> MvcUriComponentsBuilder.fromMethodName(
-                                FileUploadController.class,
-                                "serveFile",
-                                path
-                                    .getFileName()
-                                    .toString())
-                                .build().toString()
+                        .map(path -> MvcUriComponentsBuilder
+                                    .fromMethodName(
+                                        FileUploadController.class,
+                                        "serveFile",
+                                        path
+                                            .getFileName()
+                                            .toString())
+                                    .build().toString()
                         )
                 .collect(Collectors.toList()));
 
@@ -56,11 +57,11 @@ public class FileUploadController {
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 
-        Resource file = storageService.loadAsResource(filename);
+        Resource file = fileSystemStorageService.loadAsResource(filename);
         return ResponseEntity
                 .ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + file.getFilename() + "\"").
-                body(file);
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
     }
 
     @PostMapping("/")
@@ -68,7 +69,7 @@ public class FileUploadController {
             @RequestParam("file") MultipartFile file,
             RedirectAttributes redirectAttributes) {
 
-        storageService.store(file);
+        fileSystemStorageService.store(file);
         redirectAttributes.addFlashAttribute(
                 "message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
@@ -78,7 +79,9 @@ public class FileUploadController {
 
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
-        return ResponseEntity.notFound().build();
+        return ResponseEntity
+                .notFound()
+                .build();
     }
 
 }

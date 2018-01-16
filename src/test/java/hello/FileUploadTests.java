@@ -3,6 +3,7 @@ package hello;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import hello.storage.service.FileSystemStorageService;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import hello.storage.exeception.StorageFileNotFoundException;
-import hello.storage.service.StorageService;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -35,7 +35,7 @@ public class FileUploadTests {
     private MockMvc mvc;
 
     @MockBean
-    private StorageService storageService;
+    private FileSystemStorageService storageService;
 
     @Test
     public void shouldListAllFiles() throws Exception {
