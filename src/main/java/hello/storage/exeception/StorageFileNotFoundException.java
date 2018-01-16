@@ -1,4 +1,4 @@
-package hello.storage;
+package hello.storage.exeception;
 
 public class StorageFileNotFoundException extends StorageException {
 

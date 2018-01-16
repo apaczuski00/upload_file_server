@@ -1,4 +1,4 @@
-package hello.storage;
+package hello.storage.service;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -8,6 +8,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
+import hello.storage.configuration.StorageProperties;
+import hello.storage.exeception.StorageException;
+import hello.storage.exeception.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
